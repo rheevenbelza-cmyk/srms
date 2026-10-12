@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Subject & Teacher Assignments - Admin{% endblock %}
+{% block topbar_title %}Subject Assignments{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div>
+        <p class="eyebrow">ADMINISTRATION</p>
+        <h1>Subjects &amp; Assigned Teachers</h1>
+        <p class="muted">Finalize which teacher handles each subject for each student. Students see these on their "My Teachers &amp; Subjects" page.</p>
+    </div>
+    <a class="btn secondary" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</div>
+
+<div class="form-wrap grade-layout">
+    <section class="card">
+        <div class="card-heading"><div><h2>Assign a Subject</h2><p>Pick a student, enter a subject, and choose the handling teacher.</p></div></div>
+        <form method="POST" action="{{ url_for('admin_add_assignment') }}">
+            <label>Student</label>
+            <select name="student_id" required>
+                <option value="" disabled selected>Select student</option>
+                {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.name }} ({{ student.student_id }})</option>
+                {% endfor %}
+            </select>
+
+            <label>Subject</label>
+            <input type="text" name="subject" placeholder="e.g. Mathematics 101" required>
+
+            <label>Handling Teacher</label>
+            <select name="teacher_id" required>
+                <option value="" disabled selected>Select teacher</option>
+                {% for teacher in teachers %}
+                    <option value="{{ teacher.id }}">{{ teacher.name }}</option>
+                {% endfor %}
+            </select>
+
+            <button class="btn primary full" type="submit">Save Assignment</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <div class="card-heading"><div><h2>All Assignments</h2><p>{{ rows|length }} subject assignment(s) saved.</p></div></div>
+
+        {% if rows %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Student</th><th>Subject</th><th>Teacher Handling</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                {% for row in rows %}
+                    <tr>
+                        <td>
+                            <b>{{ row.student.name if row.student else "—" }}</b><br>
+                            <span class="muted">{{ row.student.student_id if row.student else "" }}</span>
+                        </td>
+                        <td>{{ row.assignment.subject }}</td>
+                        <td>{{ row.teacher.name if row.teacher else "—" }}</td>
+                        <td class="actions">
+                            <a class="btn small secondary" href="{{ url_for('admin_edit_assignment', assignment_id=row.assignment.id) }}">Edit</a>
+                            <form method="POST" action="{{ url_for('admin_delete_assignment', assignment_id=row.assignment.id) }}" onsubmit="return confirm('Remove this subject assignment?');">
+                                <button class="btn small danger" type="submit">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <div class="empty">No subject assignments yet. Use the form to add one.</div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

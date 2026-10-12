@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Student Records Management System{% endblock %}
+{% block topbar_title %}Home{% endblock %}
+
+{% block content %}
+<section class="formal-home">
+    <div class="school-header">
+        <p class="eyebrow">SCHOOL INFORMATION SYSTEM</p>
+        <h1>Student Records<br>Management System</h1>
+        <div class="formal-line"></div>
+        <p class="hero-text">
+            A secure web-based system for managing student academic records,
+            user accounts, and school information.
+        </p>
+
+        <div class="hero-buttons">
+            <a class="btn primary" href="{{ url_for('login') }}">Sign In</a>
+            <a class="btn secondary" href="{{ url_for('signup') }}">Register Account</a>
+        </div>
+    </div>
+
+    <div class="notice">
+        <strong>System Notice</strong>
+        <p>
+            Students, teachers, and authorized school personnel should use
+            their registered accounts when accessing the system.
+        </p>
+    </div>
+</section>
+{% endblock %}

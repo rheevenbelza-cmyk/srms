@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Manage Courses - Admin{% endblock %}
+{% block topbar_title %}Manage Courses{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div>
+        <p class="eyebrow">ADMINISTRATION</p>
+        <h1>Courses</h1>
+        <p class="muted">Add new courses. New courses become available in registration, signup, and grade entry.</p>
+    </div>
+    <a class="btn secondary" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</div>
+
+<div class="form-wrap grade-layout">
+    <section class="card">
+        <div class="card-heading"><div><h2>Add Course</h2><p>Example: code BSN, program Bachelor of Science in Nursing.</p></div></div>
+        <form method="POST">
+            <label>Course Code</label>
+            <input type="text" name="code" maxlength="10" placeholder="e.g. BSN" required>
+            <p class="field-hint">2-10 letters or numbers, e.g. BSN, BSIT, BSCS.</p>
+
+            <label>Full Program Name</label>
+            <input type="text" name="program" placeholder="e.g. Bachelor of Science in Nursing" required>
+
+            <button class="btn primary full" type="submit">Add Course</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <div class="card-heading"><div><h2>Existing Courses</h2><p>{{ COURSES|length }} course(s) registered.</p></div></div>
+
+        {% if COURSES %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Course Code</th><th>Program Name</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                {% for course in COURSES %}
+                    <tr>
+                        <td><span class="course-tag">{{ course }}</span></td>
+                        <td>{{ PROGRAMS.get(course, "—") }}</td>
+                        <td class="actions">
+                            <form method="POST" action="{{ url_for('admin_delete_course', code=course) }}" onsubmit="return confirm('Remove this course?');">
+                                <button class="btn small danger" type="submit">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <div class="empty">No courses registered.</div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

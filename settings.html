@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Settings - Student Records{% endblock %}
+{% block topbar_title %}Settings{% endblock %}
+
+{% block content %}
+<div class="form-wrap single">
+    <div class="form-card wide">
+        <p class="eyebrow">DISPLAY PREFERENCES</p>
+        <h1>Settings</h1>
+        <p class="muted">
+            These preferences are saved on this device/browser only, since this
+            project stores no data in a database.
+        </p>
+
+        <div class="settings-list">
+            <div class="settings-row">
+                <div class="settings-row-text">
+                    <b>Dark Mode</b>
+                    <span>Switch the interface to a dark color theme.</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="switch-track"></span>
+                </label>
+            </div>
+
+            <div class="settings-row">
+                <div class="settings-row-text">
+                    <b>Larger Text</b>
+                    <span>Increase text size across the system for easier reading.</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="largeTextToggle">
+                    <span class="switch-track"></span>
+                </label>
+            </div>
+
+            <div class="settings-row">
+                <div class="settings-row-text">
+                    <b>Compact Tables</b>
+                    <span>Reduce row spacing in tables to fit more information on screen.</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="compactTableToggle">
+                    <span class="switch-track"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

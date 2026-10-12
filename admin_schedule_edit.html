@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Edit Schedule - Admin{% endblock %}
+{% block topbar_title %}Edit Schedule{% endblock %}
+
+{% block content %}
+<div class="form-wrap single">
+    <div class="form-card">
+        <p class="eyebrow">ADMINISTRATION</p>
+        <h1>Edit Schedule Entry</h1>
+        <p class="muted">Student: <b>{{ student.name }}</b> ({{ student.student_id }}).</p>
+
+        <form method="POST">
+            <label>Subject</label>
+            <input type="text" name="subject" value="{{ schedule.subject }}" required>
+
+            <label>Day</label>
+            <select name="day" required>
+                {% for day in DAYS %}
+                    <option value="{{ day }}" {% if day == schedule.day %}selected{% endif %}>{{ day }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Time</label>
+            <input type="text" name="time" value="{{ schedule.time }}" required>
+
+            <label>Room</label>
+            <input type="text" name="room" value="{{ schedule.room }}" required>
+
+            <button class="btn primary full" type="submit">Save Changes</button>
+        </form>
+
+        <p class="form-footer"><a href="{{ url_for('admin_schedules') }}">Back to All Schedules</a></p>
+    </div>
+</div>
+{% endblock %}

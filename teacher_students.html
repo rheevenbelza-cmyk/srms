@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}My Students - Student Records{% endblock %}
+{% block topbar_title %}My Students{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div>
+        <p class="eyebrow">TEACHER &middot; {{ user.course or "—" }}</p>
+        <h1>My Students</h1>
+        <p class="muted">Students you have selected to handle. You may select students from any course.</p>
+    </div>
+    <a class="btn secondary" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</div>
+
+<section class="card" style="margin-bottom: 20px;">
+    <div class="card-heading">
+        <div><h2>Selected Students</h2><p>{{ my_students|length }} student(s) under you.</p></div>
+    </div>
+
+    {% if my_students %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Student ID</th><th>Name</th><th>Course</th><th>Year Level</th><th>Email</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+            {% for student in my_students %}
+                <tr>
+                    <td><b>{{ student.student_id }}</b></td>
+                    <td>{{ student.name }}</td>
+                    <td><span class="course-tag">{{ student.course or "—" }}</span></td>
+                    <td>{{ student.year_level or "—" }}</td>
+                    <td>{{ student.email }}</td>
+                    <td class="actions">
+                        <a class="btn small primary" href="{{ url_for('manage_grades', student_id=student.id) }}">Manage Grades</a>
+                        <a class="btn small secondary" href="{{ url_for('manage_schedule', student_id=student.id) }}">Schedule</a>
+                        <form method="POST" action="{{ url_for('unselect_student', student_id=student.id) }}" onsubmit="return confirm('Remove this student from your students list? Their account will NOT be deleted.');">
+                            <button class="btn small danger" type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="empty">You have not selected any students yet. Use the list below or the dashboard search to select students — even from other courses.</div>
+    {% endif %}
+</section>
+
+<section class="card">
+    <div class="card-heading">
+        <div><h2>Select Students</h2><p>Click Select to add a student to your list. Students from all courses are shown.</p></div>
+    </div>
+
+    {% if available_students %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Student ID</th><th>Name</th><th>Course</th><th>Year Level</th><th>Email</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+            {% for student in available_students %}
+                <tr>
+                    <td><b>{{ student.student_id }}</b></td>
+                    <td>{{ student.name }}</td>
+                    <td><span class="course-tag">{{ student.course or "—" }}</span></td>
+                    <td>{{ student.year_level or "—" }}</td>
+                    <td>{{ student.email }}</td>
+                    <td class="actions">
+                        <form method="POST" action="{{ url_for('select_student', student_id=student.id) }}">
+                            <button class="btn small primary" type="submit">Select</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="empty">All registered students are already in your list.</div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Registration - Student Records{% endblock %}
+{% block topbar_title %}Register{% endblock %}
+
+{% block content %}
+<div class="form-wrap single">
+    <div class="form-card wide">
+        <p class="eyebrow">SCHOOL REGISTRATION</p>
+        <h1>Create Account</h1>
+        <p class="muted">Register as a Student or Teacher.</p>
+
+        <form method="POST">
+            <div class="two-col">
+                <div>
+                    <label>Full Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div>
+                    <label>Email Address</label>
+                    <input type="email" name="email" required>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div>
+                    <label>Username</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input type="password" name="password" minlength="6" required>
+                </div>
+            </div>
+
+            <label>Account Type</label>
+            <div class="role-select">
+                <label class="role-option">
+                    <input type="radio" name="role" value="student" checked>
+                    <span>Student</span>
+                    <small>Access personal academic records</small>
+                </label>
+
+                <label class="role-option">
+                    <input type="radio" name="role" value="teacher">
+                    <span>Teacher</span>
+                    <small>Manage student academic records</small>
+                </label>
+            </div>
+
+            <div id="studentFields">
+                <div class="two-col">
+                    <div>
+                        <label>Student ID</label>
+                        <input
+                            type="text"
+                            id="studentIdInput"
+                            name="student_id"
+                            inputmode="numeric"
+                            pattern="\d{6}"
+                            maxlength="6"
+                            placeholder="e.g. 240123">
+                        <p class="field-hint">Must be exactly 6 digits.</p>
+                    </div>
+                    <div>
+                        <label>Year Level</label>
+                        <select name="year_level">
+                            <option value="" disabled selected>Select year level</option>
+                            {% for level in YEAR_LEVELS %}
+                                <option value="{{ level }}">{{ level }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <label>Course</label>
+                <select name="course">
+                    <option value="" disabled selected>Select course</option>
+                    {% for course in COURSES %}
+                        <option value="{{ course }}">{{ course }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="teacherFields" style="display:none;">
+                <label>Course Handled</label>
+                <select name="teacher_course">
+                    <option value="" disabled selected>Select the course you handle</option>
+                    {% for course in COURSES %}
+                        <option value="{{ course }}">{{ course }}</option>
+                    {% endfor %}
+                </select>
+                <p class="field-hint">You will only see students registered under this course by default.</p>
+            </div>
+
+            <button class="btn primary full" type="submit">Create Account</button>
+        </form>
+
+        <p class="form-footer">Already registered? <a href="{{ url_for('login') }}">Sign in here</a></p>
+    </div>
+</div>
+{% endblock %}

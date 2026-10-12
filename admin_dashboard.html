@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block title %}Administration - Student Records{% endblock %}
+{% block topbar_title %}Administration{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div>
+        <p class="eyebrow">ADMINISTRATION</p>
+        <h1>Registered Users</h1>
+        <p class="muted">{{ message }}</p>
+    </div>
+    <a class="btn secondary" href="{{ url_for('profile') }}">View Profile</a>
+</div>
+
+<section class="card" style="margin-bottom: 20px;">
+    <div class="card-heading">
+        <div><h2>Admin Tools</h2><p>Create accounts, manage courses, subject assignments, and schedules.</p></div>
+    </div>
+    <div class="profile-actions">
+        <a class="btn primary" href="{{ url_for('admin_add_account') }}">Add Student / Teacher Account</a>
+        <a class="btn secondary" href="{{ url_for('admin_courses') }}">Manage Courses</a>
+        <a class="btn secondary" href="{{ url_for('admin_assignments') }}">Subjects &amp; Teachers</a>
+        <a class="btn secondary" href="{{ url_for('admin_schedules') }}">All Schedules</a>
+    </div>
+</section>
+
+<section class="card" style="margin-bottom: 20px;">
+    <div class="card-heading">
+        <div><h2>Students</h2><p>{{ students|length }} student account(s) registered.</p></div>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Name</th><th>Email</th><th>Username</th><th>Student ID</th><th>Course</th><th>Year Level</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+            {% for account in students %}
+                <tr>
+                    <td><b>{{ account.name }}</b></td>
+                    <td>{{ account.email }}</td>
+                    <td>{{ account.username }}</td>
+                    <td>{{ account.student_id or "—" }}</td>
+                    <td>{{ account.course or "—" }}</td>
+                    <td>{{ account.year_level or "—" }}</td>
+                    <td class="actions">
+                        <a class="btn small secondary" href="{{ url_for('admin_reset_password', user_id=account.id) }}">Reset Password</a>
+                        <a class="btn small secondary" href="{{ url_for('admin_change_id', user_id=account.id) }}">Change ID</a>
+                        <a class="btn small secondary" href="{{ url_for('admin_change_role', user_id=account.id) }}">Change Role</a>
+                        <form method="POST" action="{{ url_for('admin_delete_account', user_id=account.id) }}" onsubmit="return confirm('Delete this account permanently?');">
+                            <button class="btn small danger" type="submit">Delete Account</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="card" style="margin-bottom: 20px;">
+    <div class="card-heading">
+        <div><h2>Teachers</h2><p>{{ teachers|length }} teacher account(s) registered.</p></div>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Name</th><th>Email</th><th>Username</th><th>Course Handled</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+            {% for account in teachers %}
+                <tr>
+                    <td><b>{{ account.name }}</b></td>
+                    <td>{{ account.email }}</td>
+                    <td>{{ account.username }}</td>
+                    <td>{{ account.course or "—" }}</td>
+                    <td class="actions">
+                        <a class="btn small secondary" href="{{ url_for('admin_reset_password', user_id=account.id) }}">Reset Password</a>
+                        <a class="btn small secondary" href="{{ url_for('admin_change_role', user_id=account.id) }}">Change Role</a>
+                        <form method="POST" action="{{ url_for('admin_delete_account', user_id=account.id) }}" onsubmit="return confirm('Delete this account permanently?');">
+                            <button class="btn small danger" type="submit">Delete Account</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="card" style="margin-top: 20px;">
+    <div class="card-heading">
+        <div><h2>Post an Announcement</h2><p>Announcements are shown to all logged-in students and teachers.</p></div>
+    </div>
+
+    <form method="POST" action="{{ url_for('admin_add_announcement') }}">
+        <label>Announcement Title</label>
+        <input type="text" name="title" required>
+
+        <label>Message</label>
+        <textarea name="body" rows="4" required></textarea>
+
+        <button class="btn primary full" type="submit">Post Announcement</button>
+    </form>
+
+    {% if announcements %}
+    <div class="table-wrap" style="margin-top: 20px;">
+        <table>
+            <thead><tr><th>Title</th><th>Message</th><th>Action</th></tr></thead>
+            <tbody>
+            {% for item in announcements %}
+                <tr>
+                    <td><b>{{ item.title }}</b></td>
+                    <td>{{ item.body }}</td>
+                    <td class="actions">
+                        <form method="POST" action="{{ url_for('admin_delete_announcement', announcement_index=loop.index0) }}" onsubmit="return confirm('Remove this announcement?');">
+                            <button class="btn small danger" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="empty" style="margin-top: 20px;">No announcements posted yet.</div>
+    {% endif %}
+</section>
+
+<section class="card" style="margin-top: 20px;">
+    <div class="card-heading">
+        <div><h2>Submitted Problem Reports</h2><p>Reports submitted through Contact Support appear here.</p></div>
+    </div>
+
+    {% if bug_reports %}
+        {% for report in bug_reports %}
+        <div class="report-item">
+            <div class="report-head">
+                <div>
+                    <b>{{ report.subject }}</b>
+                    <span class="muted"> — from {{ report.name }} ({{ report.email }})</span>
+                </div>
+                <form method="POST" action="{{ url_for('admin_delete_report', report_index=loop.index0) }}" onsubmit="return confirm('Remove this report?');">
+                    <button class="btn small danger" type="submit">Remove</button>
+                </form>
+            </div>
+            <p class="report-body">{{ report.message }}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty">No problem reports have been submitted.</div>
+    {% endif %}
+</section>
+{% endblock %}

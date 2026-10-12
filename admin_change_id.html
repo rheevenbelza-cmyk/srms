@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Change Student ID{% endblock %}
+{% block topbar_title %}Change Student ID{% endblock %}
+
+{% block content %}
+<div class="form-wrap single">
+    <div class="form-card">
+        <p class="eyebrow">ADMINISTRATION</p>
+        <h1>Change Student ID</h1>
+        <p class="muted">
+            Change the Student ID of <b>{{ target.name }}</b>
+            (current ID: <b>{{ target.student_id }}</b>).
+        </p>
+
+        <form method="POST">
+            <label>New Student ID</label>
+            <input
+                type="text"
+                id="newStudentIdInput"
+                name="new_student_id"
+                inputmode="numeric"
+                pattern="\d{6}"
+                maxlength="6"
+                placeholder="e.g. 240123"
+                title="Student ID must be exactly 6 digits"
+                required>
+            <p class="field-hint">Must be exactly 6 digits and not already registered.</p>
+
+            <button class="btn primary full" type="submit">Change ID</button>
+        </form>
+
+        <p class="form-footer"><a href="{{ url_for('dashboard') }}">Back to Registered Users</a></p>
+    </div>
+</div>
+{% endblock %}

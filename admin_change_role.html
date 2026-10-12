@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Change Account Role{% endblock %}
+{% block topbar_title %}Change Account Role{% endblock %}
+
+{% block content %}
+<div class="form-wrap single">
+    <div class="form-card">
+        <p class="eyebrow">ADMINISTRATION</p>
+        <h1>Change Account Role</h1>
+        <p class="muted">
+            Change the role of <b>{{ target.name }}</b>
+            (current role: <b>{{ target.role|capitalize }}</b>).
+        </p>
+
+        <form method="POST">
+            <label>New Role</label>
+            <select name="role" id="roleSelect" required>
+                <option value="" disabled selected>Select new role</option>
+                <option value="student" {% if target.role == "student" %}disabled{% endif %}>Student</option>
+                <option value="teacher" {% if target.role == "teacher" %}disabled{% endif %}>Teacher</option>
+            </select>
+
+            <div id="studentDetails" style="display:none;">
+                <div class="two-col">
+                    <div>
+                        <label>Student ID</label>
+                        <input
+                            type="text"
+                            id="newStudentIdInput"
+                            name="new_student_id"
+                            inputmode="numeric"
+                            pattern="\d{6}"
+                            maxlength="6"
+                            placeholder="e.g. 240123">
+                    </div>
+                    <div>
+                        <label>Year Level</label>
+                        <select name="year_level">
+                            <option value="" disabled selected>Select year level</option>
+                            {% for level in YEAR_LEVELS %}
+                                <option value="{{ level }}">{{ level }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <label>Course</label>
+                <select name="course">
+                    <option value="" disabled selected>Select course</option>
+                    {% for course in COURSES %}
+                        <option value="{{ course }}" {% if target.course == course %}selected{% endif %}>{{ course }}</option>
+                    {% endfor %}
+                </select>
+                <p class="field-hint">Student details are required when changing a teacher into a student.</p>
+            </div>
+
+            <button class="btn primary full" type="submit">Change Role</button>
+        </form>
+
+        <p class="form-footer"><a href="{{ url_for('dashboard') }}">Back to Registered Users</a></p>
+    </div>
+</div>
+
+<script>
+    // Show the student detail fields only when "Student" is chosen.
+    (function () {
+        var roleSelect = document.getElementById("roleSelect");
+        var studentDetails = document.getElementById("studentDetails");
+        var idInput = document.getElementById("newStudentIdInput");
+
+        roleSelect.addEventListener("change", function () {
+            var show = roleSelect.value === "student";
+            studentDetails.style.display = show ? "block" : "none";
+            idInput.required = show;
+        });
+
+        if (idInput) {
+            idInput.addEventListener("input", function () {
+                idInput.value = idInput.value.replace(/\D/g, "").slice(0, 6);
+            });
+        }
+    })();
+</script>
+{% endblock %}

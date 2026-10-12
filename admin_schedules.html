@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}All Schedules - Admin{% endblock %}
+{% block topbar_title %}Schedules{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div>
+        <p class="eyebrow">ADMINISTRATION</p>
+        <h1>Class Schedules</h1>
+        <p class="muted">View, add, edit, or remove any student's schedule entries.</p>
+    </div>
+    <a class="btn secondary" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</div>
+
+<div class="form-wrap grade-layout">
+    <section class="card">
+        <div class="card-heading"><div><h2>Add Schedule Entry</h2><p>The student will see this on their Schedule page.</p></div></div>
+        <form method="POST">
+            <label>Student</label>
+            <select name="student_id" required>
+                <option value="" disabled selected>Select student</option>
+                {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.name }} ({{ student.student_id }})</option>
+                {% endfor %}
+            </select>
+
+            <label>Subject</label>
+            <input type="text" name="subject" required>
+
+            <label>Day</label>
+            <select name="day" required>
+                <option value="" disabled selected>Select day</option>
+                {% for day in DAYS %}
+                    <option value="{{ day }}">{{ day }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Time</label>
+            <input type="text" name="time" placeholder="e.g. 8:00 AM - 9:30 AM" required>
+
+            <label>Room</label>
+            <input type="text" name="room" placeholder="e.g. Room 204" required>
+
+            <button class="btn primary full" type="submit">Add to Schedule</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <div class="card-heading"><div><h2>All Schedule Entries</h2><p>{{ rows|length }} schedule entry(ies) saved.</p></div></div>
+
+        {% if rows %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Student</th><th>Day</th><th>Time</th><th>Subject</th><th>Room</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                {% for row in rows %}
+                    <tr>
+                        <td><b>{{ row.student.name if row.student else "—" }}</b></td>
+                        <td><b>{{ row.schedule.day }}</b></td>
+                        <td>{{ row.schedule.time }}</td>
+                        <td>{{ row.schedule.subject }}</td>
+                        <td>{{ row.schedule.room }}</td>
+                        <td class="actions">
+                            <a class="btn small secondary" href="{{ url_for('admin_edit_schedule', schedule_id=row.schedule.id) }}">Edit</a>
+                            <form method="POST" action="{{ url_for('admin_delete_schedule', schedule_id=row.schedule.id) }}" onsubmit="return confirm('Delete this schedule entry?');">
+                                <button class="btn small danger" type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <div class="empty">No schedule entries yet.</div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

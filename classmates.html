@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}My Classmates - Student Records{% endblock %}
+{% block topbar_title %}My Classmates{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div>
+        <p class="eyebrow">{{ user.course or "—" }} &middot; {{ user.year_level or "—" }}</p>
+        <h1>My Classmates</h1>
+        <p class="muted">Other students registered under the same course and year level.</p>
+    </div>
+    <a class="btn secondary" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</div>
+
+<section class="card">
+    <div class="card-heading">
+        <div><h2>Classmates</h2><p>{{ classmates|length }} student(s) found.</p></div>
+    </div>
+
+    {% if classmates %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Student ID</th><th>Name</th><th>Email</th></tr>
+            </thead>
+            <tbody>
+            {% for mate in classmates %}
+                <tr>
+                    <td><b>{{ mate.student_id }}</b></td>
+                    <td>{{ mate.name }}</td>
+                    <td>{{ mate.email }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="empty">No classmates found yet for your course and year level.</div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Contact Support - Student Records{% endblock %}
+{% block topbar_title %}Contact Support{% endblock %}
+
+{% block content %}
+<div class="form-wrap single">
+    <div class="form-card wide">
+        <p class="eyebrow">TECHNICAL SUPPORT</p>
+        <h1>Report a Problem</h1>
+        <p class="muted">
+            If you discover a bug, error, incorrect display, or other system problem,
+            submit the details below for the system administrator.
+        </p>
+
+        <form method="POST">
+            <div class="two-col">
+                <div>
+                    <label>Your Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div>
+                    <label>Email Address</label>
+                    <input type="email" name="email" required>
+                </div>
+            </div>
+
+            <label>Subject</label>
+            <input type="text" name="subject" required>
+
+            <label>Problem Description</label>
+            <textarea name="message" rows="7" required></textarea>
+
+            <button class="btn primary full" type="submit">Submit Report</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

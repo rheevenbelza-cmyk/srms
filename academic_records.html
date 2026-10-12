@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Academic Records - Student Records{% endblock %}
+{% block topbar_title %}Academic Records{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div>
+        <p class="eyebrow">{{ user.course or "—" }} &middot; {{ user.year_level or "—" }}</p>
+        <h1>Academic Records</h1>
+        <p class="muted">{{ user.name }} &middot; Student ID: {{ user.student_id }}</p>
+    </div>
+    <a class="btn secondary" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</div>
+
+<section class="card">
+    <div class="card-heading">
+        <div><h2>My Grades</h2><p>Your recorded grades per academic period.</p></div>
+    </div>
+
+    {% if my_grades %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Academic Period</th>
+                    <th>Program</th>
+                    <th>Year Level</th>
+                    <th>Subject</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for grade in my_grades %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td><span class="course-tag">{{ grade.semester }}</span></td>
+                    <td>{{ grade.program }}</td>
+                    <td>{{ grade.year_level }}</td>
+                    <td>{{ grade.subject }}</td>
+                    <td><span class="grade">{{ grade.grade }}</span></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="empty">No grades have been recorded yet.</div>
+    {% endif %}
+</section>
+{% endblock %}

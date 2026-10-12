@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Profile - Student Records{% endblock %}
+{% block topbar_title %}Profile{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+    <div class="profile-header">
+        <div class="profile-avatar">{{ user.name[0]|upper }}</div>
+        <div>
+            <p class="eyebrow">USER PROFILE</p>
+            <h1>{{ user.name }}</h1>
+            <span class="role-badge {{ user.role }}">{{ user.role|capitalize }}</span>
+        </div>
+    </div>
+
+    <section class="card profile-card">
+        <h2>Account Information</h2>
+        <div class="profile-grid">
+            <div><span>Full Name</span><b>{{ user.name }}</b></div>
+            <div><span>Email Address</span><b>{{ user.email }}</b></div>
+            <div><span>Username</span><b>{{ user.username }}</b></div>
+            <div><span>Account Type</span><b>{{ user.role|capitalize }}</b></div>
+            {% if user.role == "student" %}
+            <div><span>Student ID</span><b>{{ user.student_id }}</b></div>
+            <div><span>Course</span><b>{{ user.course or "—" }}</b></div>
+            <div><span>Year Level</span><b>{{ user.year_level or "—" }}</b></div>
+            {% elif user.role == "teacher" %}
+            <div><span>Course Handled</span><b>{{ user.course or "—" }}</b></div>
+            {% endif %}
+        </div>
+        <div class="profile-actions">
+            <a class="btn secondary" href="{{ url_for('change_password') }}">Change Password</a>
+            <a class="btn secondary" href="{{ url_for('settings') }}">Settings</a>
+            <a class="btn primary" href="{{ url_for('dashboard') }}">Return to Dashboard</a>
+        </div>
+    </section>
+</div>
+{% endblock %}

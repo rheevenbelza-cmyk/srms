@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Student Schedule - Student Records{% endblock %}
+{% block topbar_title %}Student Schedule{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div>
+        <p class="eyebrow">SCHEDULE MANAGEMENT</p>
+        <h1>{{ student.name }}</h1>
+        <p class="muted">{{ student.student_id }} &middot; {{ student.course }} &middot; {{ student.year_level }} &middot; {{ student.email }}</p>
+    </div>
+    <a class="btn secondary" href="{{ url_for('teacher_students') }}">Back to My Students</a>
+</div>
+
+<div class="form-wrap grade-layout">
+    <section class="card">
+        <div class="card-heading"><div><h2>Add Schedule Entry</h2><p>The student will see this on their Schedule page.</p></div></div>
+        <form method="POST">
+            <label>Subject</label>
+            <input type="text" name="subject" required>
+
+            <label>Day</label>
+            <select name="day" required>
+                <option value="" disabled selected>Select day</option>
+                {% for day in DAYS %}
+                    <option value="{{ day }}">{{ day }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Time</label>
+            <input type="text" name="time" placeholder="e.g. 8:00 AM - 9:30 AM" required>
+
+            <label>Room</label>
+            <input type="text" name="room" placeholder="e.g. Room 204" required>
+
+            <button class="btn primary full" type="submit">Add to Schedule</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <div class="card-heading"><div><h2>Current Schedule</h2><p>{{ student_schedule|length }} schedule entry(ies).</p></div></div>
+
+        {% if student_schedule %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Day</th><th>Time</th><th>Subject</th><th>Room</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                {% for item in student_schedule %}
+                    <tr>
+                        <td><b>{{ item.day }}</b></td>
+                        <td>{{ item.time }}</td>
+                        <td>{{ item.subject }}</td>
+                        <td>{{ item.room }}</td>
+                        <td class="actions">
+                            <form method="POST" action="{{ url_for('delete_schedule', schedule_id=item.id) }}" onsubmit="return confirm('Delete this schedule entry?');">
+                                <button class="btn small danger" type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <div class="empty">No schedule entries yet.</div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}My Schedule - Student Records{% endblock %}
+{% block topbar_title %}My Schedule{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div>
+        <p class="eyebrow">{{ user.course or "—" }} &middot; {{ user.year_level or "—" }}</p>
+        <h1>My Schedule</h1>
+        <p class="muted">Class schedule posted by your teachers.</p>
+    </div>
+    <a class="btn secondary" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</div>
+
+<section class="card">
+    <div class="card-heading">
+        <div><h2>Class Schedule</h2><p>{{ my_schedule|length }} schedule entry(ies).</p></div>
+    </div>
+
+    {% if my_schedule %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Day</th><th>Time</th><th>Subject</th><th>Room</th></tr>
+            </thead>
+            <tbody>
+            {% for item in my_schedule %}
+                <tr>
+                    <td><b>{{ item.day }}</b></td>
+                    <td>{{ item.time }}</td>
+                    <td>{{ item.subject }}</td>
+                    <td>{{ item.room }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="empty">No schedule has been posted yet for you.</div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Student Records{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        // Applied before the page paints, so there is no light-mode flash
+        // when a user has Dark Mode saved from the Settings page.
+        (function () {
+            try {
+                var raw = localStorage.getItem("srms_settings");
+                var settings = raw ? JSON.parse(raw) : {};
+                document.documentElement.setAttribute("data-theme", settings.theme || "light");
+                document.documentElement.setAttribute("data-fontsize", settings.fontSize || "normal");
+                document.documentElement.setAttribute("data-density", settings.density || "comfortable");
+            } catch (e) {}
+        })();
+    </script>
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <a class="brand-top" href="{{ url_for('index') }}">Student Records Management System</a>
+
+        <button class="hamburger" id="navToggle" aria-label="Open menu">&#9776;</button>
+
+        <nav class="topnav" id="topnav">
+            {% if current_user %}
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                {% if current_user.role == "student" %}
+                    <a href="{{ url_for('classmates') }}">My Classmates</a>
+                    <a href="{{ url_for('academic_records') }}">Academic Records</a>
+                    <a href="{{ url_for('my_teachers') }}">My Teachers &amp; Subjects</a>
+                    <a href="{{ url_for('student_schedule') }}">Schedule</a>
+                {% elif current_user.role == "teacher" %}
+                    <a href="{{ url_for('teacher_students') }}">Students</a>
+                {% elif current_user.role == "admin" %}
+                    <a href="{{ url_for('admin_add_account') }}">Add Account</a>
+                    <a href="{{ url_for('admin_assignments') }}">Subjects</a>
+                    <a href="{{ url_for('admin_schedules') }}">Schedules</a>
+                    <a href="{{ url_for('admin_courses') }}">Courses</a>
+                {% endif %}
+                <a href="{{ url_for('profile') }}">Profile</a>
+                <a href="{{ url_for('change_password') }}">Change Password</a>
+                <a href="{{ url_for('settings') }}">Settings</a>
+                <a href="{{ url_for('contact') }}">Report a Problem</a>
+                <a class="logout" href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('signup') }}">Register</a>
+                <a href="{{ url_for('contact') }}">Contact Support</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% if current_user and announcements %}
+        <section class="announcement-board">
+            <p class="eyebrow">SCHOOL ANNOUNCEMENTS</p>
+            {% for item in announcements %}
+            <div class="announcement">
+                <b>{{ item.title }}</b>
+                <p>{{ item.body }}</p>
+            </div>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>Student Records Management System</p>
+        <p>For technical issues or system concerns, please use Contact Support.</p>
+    </footer>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

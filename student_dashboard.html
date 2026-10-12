@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard - Student Records{% endblock %}
+{% block topbar_title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div>
+        <p class="eyebrow">STUDENT DASHBOARD</p>
+        <h1>Welcome, {{ user.name }}</h1>
+        <p class="muted">{{ message }}</p>
+    </div>
+    <div class="profile-pill">
+        <span>Student ID</span>
+        <b>{{ user.student_id }}</b>
+    </div>
+</div>
+
+<section class="card" style="margin-bottom: 20px;">
+    <div class="card-heading">
+        <div>
+            <h2>Course Information</h2>
+            <p>Your registered course and year level.</p>
+        </div>
+    </div>
+    <div class="profile-grid">
+        <div><span>Course</span><b>{{ user.course or "—" }}</b></div>
+        <div><span>Program</span><b>{{ PROGRAMS.get(user.course, "—") or "—" }}</b></div>
+        <div><span>Year Level</span><b>{{ user.year_level or "—" }}</b></div>
+        <div><span>Email</span><b>{{ user.email }}</b></div>
+    </div>
+</section>
+
+<section class="card" style="margin-bottom: 20px;">
+    <div class="card-heading">
+        <div><h2>Quick Links</h2><p>Jump to your academic information.</p></div>
+    </div>
+    <div class="profile-actions">
+        <a class="btn primary" href="{{ url_for('academic_records') }}">View Academic Records</a>
+        <a class="btn secondary" href="{{ url_for('student_schedule') }}">View My Schedule</a>
+        <a class="btn secondary" href="{{ url_for('classmates') }}">View Classmates</a>
+        <a class="btn secondary" href="{{ url_for('profile') }}">View Profile</a>
+    </div>
+</section>
+{% endblock %}

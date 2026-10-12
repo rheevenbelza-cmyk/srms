@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}My Teachers &amp; Subjects - Student Records{% endblock %}
+{% block topbar_title %}My Teachers &amp; Subjects{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div>
+        <p class="eyebrow">{{ user.course or "—" }} &middot; {{ user.year_level or "—" }}</p>
+        <h1>My Teachers &amp; Subjects</h1>
+        <p class="muted">Your finalized subjects and the teacher handling each one.</p>
+    </div>
+    <a class="btn secondary" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</div>
+
+<section class="card" style="margin-bottom: 20px;">
+    <div class="card-heading">
+        <div><h2>My Subjects</h2><p>{{ rows|length }} subject(s) assigned to you.</p></div>
+    </div>
+
+    {% if rows %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>No.</th><th>Subject</th><th>Teacher Handling</th><th>Teacher Email</th></tr>
+            </thead>
+            <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td><b>{{ row.assignment.subject }}</b></td>
+                    <td>{{ row.teacher.name if row.teacher else "—" }}</td>
+                    <td>{{ row.teacher.email if row.teacher else "—" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="empty">No subjects have been assigned to you yet.</div>
+    {% endif %}
+</section>
+
+<section class="card">
+    <div class="card-heading">
+        <div><h2>My Teachers</h2><p>{{ my_teacher_list|length }} teacher(s) handling your subjects.</p></div>
+    </div>
+
+    {% if my_teacher_list %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>No.</th><th>Teacher</th><th>Course Handled</th><th>Email</th></tr>
+            </thead>
+            <tbody>
+            {% for teacher in my_teacher_list %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td><b>{{ teacher.name }}</b></td>
+                    <td><span class="course-tag">{{ teacher.course or "—" }}</span></td>
+                    <td>{{ teacher.email }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="empty">No teachers are handling your subjects yet.</div>
+    {% endif %}
+</section>
+{% endblock %}
